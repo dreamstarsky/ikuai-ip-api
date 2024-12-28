@@ -8,14 +8,16 @@ import (
 )
 
 func (i *Ikuai) Login() error {
+
+	// 这明文传密码(pass)也是无敌了，但不传也能login(
 	data, err := json.Marshal(struct {
 		Username string `json:"username"`
 		Passwd   string `json:"passwd"`
-		Pass     string `json:"pass"`
+		// Pass     string `json:"pass"`
 	}{
 		Username: i.username,
 		Passwd:   i.passwd,
-		Pass:     i.pass,
+		// Pass:     i.pass,
 	})
 	if err != nil {
 		return err

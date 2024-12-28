@@ -20,7 +20,7 @@ func main() {
 	password := os.Getenv("PASSWORD")
 
 	if url == "" || username == "" || password == "" {
-		log.Println("$URL, $USER or $PASSWORD not found!")
+		log.Println("$URL, $User or $PASSWORD not found!")
 		os.Exit(1)
 	}
 
