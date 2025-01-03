@@ -8,13 +8,23 @@ import (
 )
 
 type Resp struct {
-	Result int         `json:"Result"`
-	ErrMsg string      `json:"ErrMsg"`
-	Data   interface{} `json:"Data"`
+	Result int             `json:"Result"`
+	ErrMsg string          `json:"ErrMsg"`
+	Data   json.RawMessage `json:"Data"`
 }
 
-func (i *Ikuai) Call(url, action, func_name string, param any) (Resp, error) {
-	data, err := json.Marshal(param)
+type Param struct {
+	Type string `json:"TYPE"`
+}
+
+type Request struct {
+	FuncName string `json:"func_name"`
+	Action   string `json:"action"`
+	Param    Param  `json:"param"`
+}
+
+func (i *Ikuai) Call(action, func_name, param string) (Resp, error) {
+	data, err := json.Marshal(Request{func_name, action, Param{param}})
 	if err != nil {
 		return Resp{}, err
 	}
@@ -22,10 +32,6 @@ func (i *Ikuai) Call(url, action, func_name string, param any) (Resp, error) {
 	req, err := http.NewRequest("POST", i.url+"/Action/call", bytes.NewBuffer(data))
 	if err != nil {
 		return Resp{}, err
-	}
-
-	if i.client == nil {
-		return Resp{}, errors.New("not login yet")
 	}
 
 	resp, err := i.client.Do(req)
@@ -42,6 +48,11 @@ func (i *Ikuai) Call(url, action, func_name string, param any) (Resp, error) {
 	err = json.NewDecoder(resp.Body).Decode(&res)
 	if err != nil {
 		return Resp{}, err
+	}
+
+	if res.Result == 10014 {
+		i.Login()
+		return res, nil
 	}
 
 	return res, nil

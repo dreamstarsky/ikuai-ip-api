@@ -28,10 +28,6 @@ func (i *Ikuai) Login() error {
 		return err
 	}
 
-	if i.client == nil {
-		i.client = &http.Client{}
-	}
-
 	resp, err := i.client.Do(req)
 	if err != nil {
 		return err

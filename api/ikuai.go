@@ -4,8 +4,10 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
+
 	// "log"
 	"net/http"
+	"net/http/cookiejar"
 )
 
 type Ikuai struct {
@@ -37,6 +39,9 @@ func NewIkuai(url, username, password string) Ikuai {
 	}
 
 	ikuai.url = url
+
+	cookieJar, _ := cookiejar.New(nil)
+	ikuai.client = &http.Client{Jar: cookieJar}
 
 	// log.Println(ikuai.pass)
 	// log.Println(ikuai.passwd)
