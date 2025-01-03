@@ -47,7 +47,7 @@ func main() {
 			if err == nil {
 				c.String(200, ip)
 				return
-			} else {
+			} else if i+1 < MaxGetipTryTime {
 				log.Println("Getip failed:", err, "Try again...")
 			}
 		}
