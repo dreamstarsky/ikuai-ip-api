@@ -5,9 +5,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod download
-
 ENV GIN_MODE=release
+
+RUN go mod download
 
 RUN go build -o ikuai-ip-api .
 
